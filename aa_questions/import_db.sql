@@ -15,9 +15,13 @@ CREATE TABLE questions(
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE question_follows (
+CREATE TABLE question_follows 
+    id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    question_id INTEGER NOT NULL
+    question_id INTEGER NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
 CREATE TABLE replies (
@@ -33,6 +37,7 @@ CREATE TABLE replies (
 );
 
 CREATE TABLE question_likes (
+    id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
     question_id INTEGER NOT NULL,
 
@@ -43,8 +48,8 @@ CREATE TABLE question_likes (
 INSERT INTO
     users(fname, lname)
 VALUES
-    ('George', 'Tsimis')
-    ('Sohee', 'Park')
+    ('George', 'Tsimis'),
+    ('Sohee', 'Park'),
     ('Super', 'Man');
 
 INSERT INTO
@@ -57,8 +62,21 @@ VALUES
 INSERT INTO
     replies(question_id, parent_id, user_id, body)
 VALUES
-    ((SELECT id FROM questions WHERE title = 'Got Snacks?'), (SELECT id FROM users WHERE lname = 'Park'), 'Snacks for tonight are pizza, hot wings, and popcorn'),
-    ((SELECT id FROM questions WHERE title = 'Where are we going?'), (SELECT id FROM users WHERE lname = 'Man'), 'We are going hiking'),
-    ((SELECT id FROM questions WHERE title = 'Kryptonite?'), (SELECT id FROM users WHERE lname = 'Tsimis'), 'Yes, there is'),
-    ((SELECT id FROM questions WHERE title = 'Got Snacks?'), (SELECT id FROM users WHERE lname = 'Man'), 'That is a whole meal')
+    ((SELECT id FROM questions WHERE title = 'Got Snacks?'), NULL, (SELECT id FROM users WHERE lname = 'Park'), 'Snacks for tonight are pizza, hot wings, and popcorn'),
+    ((SELECT id FROM questions WHERE title = 'Where are we going?'), NULL,(SELECT id FROM users WHERE lname = 'Man'), 'We are going hiking'),
+    ((SELECT id FROM questions WHERE title = 'Kryptonite?'), NULL, (SELECT id FROM users WHERE lname = 'Tsimis'), 'Yes, there is'),
+    ((SELECT id FROM questions WHERE title = 'Got Snacks?'), (SELECT id FROM replies WHERE body = 'Snacks for tonight are pizza, hot wings, and popcorn' ),(SELECT id FROM users WHERE lname = 'Man'), 'That is a whole meal');
+
+INSERT INTO 
+    question_follows(user_id, question_id)
+VALUES
+    ((SELECT id FROM users WHERE lname = 'Tsimis'), (SELECT id FROM questions WHERE title = 'Got Snacks?')),
+    ((SELECT id FROM users WHERE lname = 'Park'), (SELECT id FROM questions WHERE title = 'Where are we going?'));
+
+INSERT INTO
+    question_likes(user_id, question_id)
+VALUES
+    ((SELECT id FROM users WHERE lname = 'Man'), (SELECT id FROM questions WHERE title = 'Where are we going?')),
+    ((SELECT id FROM users WHERE lname = 'Tsimis'), (SELECT id FROM questions WHERE title = 'Kryptonite?')),
+    ((SELECT id FROM users WHERE lname = 'Park'), (SELECT id FROM questions WHERE title = 'Got Snacks?'));
 
