@@ -12,7 +12,7 @@ class User
 
     def self.find_by_name(fname, lname)
         debugger
-        u = QuestionsDataBase.instance.execute("SELECT * FROM users WHERE (users.fname = #{fname} AND users.lname = #{lname})")
+        u = QuestionsDataBase.instance.execute("SELECT * FROM users WHERE users.fname = #{fname} AND users.lname = #{lname}")
         User.new(u.first)
     end
 
