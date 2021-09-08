@@ -7,8 +7,8 @@ class Reply
     attr_reader :question_id, :parent_id, :user_id, :body
     
     def self.find_by_id(id)
-        r = QuestionsDatabase.instance.execute("SELECT * FROM replies WHERE replies.id = id")
-        Reply.new(r)
+        r = QuestionsDatabase.instance.execute("SELECT * FROM replies WHERE replies.id = #{id}")
+        Reply.new(r.first)
     end
 
     # def self.find_by_reply(body)

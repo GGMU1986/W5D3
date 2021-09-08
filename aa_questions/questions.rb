@@ -17,5 +17,3 @@ class Question
         @user_id = options['user_id']
     end
 end
-
-p Question.find_by_id(3)
